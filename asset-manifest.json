@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/javascript-words-with-javascript/static/css/main.2639c90a.chunk.css",
+    "main.js": "/javascript-words-with-javascript/static/js/main.a6077fb4.chunk.js",
+    "main.js.map": "/javascript-words-with-javascript/static/js/main.a6077fb4.chunk.js.map",
+    "runtime-main.js": "/javascript-words-with-javascript/static/js/runtime-main.bab37129.js",
+    "runtime-main.js.map": "/javascript-words-with-javascript/static/js/runtime-main.bab37129.js.map",
+    "static/js/2.615960c1.chunk.js": "/javascript-words-with-javascript/static/js/2.615960c1.chunk.js",
+    "static/js/2.615960c1.chunk.js.map": "/javascript-words-with-javascript/static/js/2.615960c1.chunk.js.map",
+    "index.html": "/javascript-words-with-javascript/index.html",
+    "precache-manifest.75312d11b7495eb5946594042df0dbe8.js": "/javascript-words-with-javascript/precache-manifest.75312d11b7495eb5946594042df0dbe8.js",
+    "service-worker.js": "/javascript-words-with-javascript/service-worker.js",
+    "static/css/main.2639c90a.chunk.css.map": "/javascript-words-with-javascript/static/css/main.2639c90a.chunk.css.map"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.bab37129.js",
+    "static/js/2.615960c1.chunk.js",
+    "static/css/main.2639c90a.chunk.css",
+    "static/js/main.a6077fb4.chunk.js"
+  ]
+}
