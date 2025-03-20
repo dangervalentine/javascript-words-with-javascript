@@ -1,4 +1,4 @@
-# Words With Javascript [see it here](https://victoriousj.github.io/javascript-words-with-javascript/)
+# Words With Javascript [see it here](https://dangervalentine.github.io/javascript-words-with-javascript/)
 
 Words With Friends or WordScape are games where a player is given a series of letters and you are challenged to find as many words as you can with these letters. For example, you could be given the letters, 'p', 'a', 'l', and 'm'. Using these letters, you can make the words, 'map', 'amp', 'pal','lamp', 'palm' and others. What this SPA does is show you these words by iterating through over English 170,000 words and finds ones that are made out of the letters provided.
 
