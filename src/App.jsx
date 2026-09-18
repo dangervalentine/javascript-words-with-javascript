@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Header from "./Header";
 import LetterInput from "./LetterInput";
 import ResultGroup from "./ResultGroup";
+import { GithubAttribution } from "./GithubAttribution";
 import { search, normalise, loadIndex } from "./helper";
 import { SEARCH_DEBOUNCE, INTRO, FADE } from "./motion";
 import "./App.css";
@@ -108,6 +109,8 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
+
+      <GithubAttribution />
     </div>
   );
 }
