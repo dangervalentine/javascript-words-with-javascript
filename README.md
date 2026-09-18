@@ -39,19 +39,25 @@ It was built for my dad, who plays these games for hours and phones the family w
 
 ## Features
 
+**Blank tiles** &mdash; Type `?` for a blank and it stands in for any single letter, the way it does on the board. Words that only work *because* of a blank are tinted, so you know one gets spent. `friend` finds 49 words; `friend?` finds 727.
+
 **Longest-first results** &mdash; Words are grouped by length with the longest group at the top, because a nine-letter word is the reason you came.
 
-**Letter rack** &mdash; What you type is mirrored as physical tiles below the field, so the letters you hold stay visible while you read down the results.
+**Letter rack that stays put** &mdash; What you type is mirrored as physical tiles, and the whole search bar pins to the top as you scroll, so the letters you hold and the field you edit them in never scroll away. Empty slots show how many tiles are still free.
 
 **Instant search** &mdash; The scan runs in single-digit milliseconds against the full dictionary. Input is debounced, so typing quickly costs one search rather than one per keystroke.
 
+**Keyboard-first** &mdash; The field takes focus on load, typing anywhere jumps into it, and <kbd>Esc</kbd> clears the rack from wherever you are. Click any word to copy it.
+
+**A useful empty state** &mdash; Rather than a blank page, it explains itself in a line and offers four starting racks to click, including one that demonstrates the blank tile.
+
 **Micro-interactions** &mdash; Tiles land with a spring and re-flow when you delete from the middle, result groups stagger in longest-first, and a clear button fades in once there is something to clear.
 
-**Accessibility** &mdash; The result summary is an `aria-live` region, so screen readers hear the count change; `prefers-reduced-motion` is honoured globally through a single `MotionConfig`.
+**Accessibility** &mdash; The result summary is an `aria-live` region, so screen readers hear the count change; `prefers-reduced-motion` is honoured globally through a single `MotionConfig`. Autofocus is skipped on touch devices so a phone keyboard never opens uninvited.
 
 ## How It Works
 
-A word is playable when it needs **no more of any letter than you are holding**. That is the whole algorithm — the work is in making it fast enough to feel instant.
+A word is playable when it needs **no more of any letter than you are holding** — or when the shortfall is small enough that your blanks can cover it. That is the whole algorithm; the work is in making it fast enough to feel instant.
 
 Each word becomes a count of its letters. The letters `r`, `e`, `a`, `l`, `l`, `y` look like this:
 
@@ -74,7 +80,8 @@ Every bar in the second image fits under the matching bar in the first, so `real
          For each dictionary word (pre-filtered to ≤ 11 letters):
          ├── skip it if it is longer than what you hold
          ├── compare its 26 counts against yours
-         └── keep it only if every count fits
+         ├── total the shortfall — letters it needs that you lack
+         └── keep it if the shortfall is 0, or ≤ your blanks
                   │
                   ▼
          Bucket the matches by length, sort longest-first
@@ -129,6 +136,8 @@ src/
 ├── Header.jsx              Tile mark, wordmark, credit
 ├── LetterInput.jsx         Letter field, clear button, tile rack
 ├── ResultGroup.jsx         One length group of matching words
+├── EmptyState.jsx          Explainer, starter racks, keyboard tips
+├── GithubAttribution.jsx   Corner badge shared with the sibling projects
 └── logo.svg                The tile mark, shared with the favicon
 
 public/

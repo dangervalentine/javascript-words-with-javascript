@@ -59,27 +59,36 @@ header {
   color: var(--nowl-text-secondary);
 }
 
-/* ---- layout ---------------------------------------------------------- */
+/* ---- sticky search bar ----------------------------------------------- */
 
-.main {
-  flex: 1;
-  width: 100%;
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 5vh 20px 12vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* The rack stays pinned while results scroll under it, so the letters you
+   are holding — and the field you edit them in — never scroll away. */
+.search-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 22px 20px 14px;
+  background: var(--nowl-bg-base);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, padding 0.2s ease;
+}
+
+.search-bar.stuck {
+  border-bottom-color: var(--nowl-border);
+  box-shadow: 0 8px 20px -12px rgba(1, 14, 24, 0.9);
+  padding-top: 14px;
 }
 
 /* ---- input ----------------------------------------------------------- */
 
 .letter-input {
   width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .input-shell {
@@ -89,10 +98,10 @@ header {
 
 .letters-field {
   width: 100%;
-  height: 58px;
+  height: 56px;
   padding: 0 44px 0 20px;
-  font-size: 1.25rem;
-  letter-spacing: 0.32em;
+  font-size: 1.2rem;
+  letter-spacing: 0.3em;
   text-align: center;
   color: var(--nowl-text);
   background: var(--nowl-bg-surface);
@@ -104,8 +113,8 @@ header {
 
 .letters-field::placeholder {
   color: var(--nowl-text-muted);
-  letter-spacing: 0.04em;
-  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  font-size: 0.9rem;
 }
 
 .letters-field:focus {
@@ -146,33 +155,45 @@ header {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  min-height: 44px;
+  gap: 7px;
+  min-height: 40px;
 }
 
 .tile {
-  width: 38px;
-  height: 42px;
+  width: 34px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--nowl-bg-base);
   background: var(--nowl-accent);
-  border-radius: 8px;
+  border-radius: 7px;
   box-shadow: 0 3px 0 rgba(1, 14, 24, 0.55);
+}
+
+/* A blank reads as a tile you have not decided yet. */
+.tile-blank {
+  background: var(--nowl-coral);
+}
+
+/* Empty slots show at a glance how many tiles are still free. */
+.tile-empty {
+  background: transparent;
+  border: 1px dashed var(--nowl-secondary-dark);
+  box-shadow: none;
 }
 
 /* ---- summary --------------------------------------------------------- */
 
 .summary {
-  margin: 26px 0 0;
-  font-size: 0.9rem;
+  margin: 14px 0 0;
+  font-size: 0.85rem;
   color: var(--nowl-text-muted);
   text-align: center;
-  min-height: 1.4em;
+  min-height: 1.3em;
 }
 
 .summary strong {
@@ -184,27 +205,138 @@ header {
   color: var(--nowl-secondary-dark);
 }
 
-.empty {
-  margin-top: 12vh;
+/* ---- layout ---------------------------------------------------------- */
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 18px 20px 14vh;
+}
+
+/* ---- empty state ----------------------------------------------------- */
+
+.empty-state {
+  max-width: 560px;
+  margin: 4vh auto 0;
+  text-align: center;
+}
+
+.empty-lead {
+  margin: 0 0 26px;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--nowl-text-secondary);
+}
+
+.examples-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--nowl-text-muted);
-  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.examples-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.example {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 9px 14px;
+  background: var(--nowl-bg-surface);
+  border: 1px solid var(--nowl-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.example:hover,
+.example:focus-visible {
+  border-color: var(--nowl-accent);
+  background: var(--nowl-bg-elevated);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.example-letters {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--nowl-text);
+}
+
+.example-note {
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--nowl-text-muted);
+}
+
+.tips {
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 0.82rem;
+  color: var(--nowl-text-muted);
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 1px 5px;
+  font-family: inherit;
+  font-size: 0.78em;
+  font-weight: 600;
+  color: var(--nowl-text-secondary);
+  background: var(--nowl-bg-elevated);
+  border: 1px solid var(--nowl-border);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+}
+
+/* ---- no matches ------------------------------------------------------ */
+
+.no-matches {
+  margin: 8vh auto 0;
+  text-align: center;
+  color: var(--nowl-text-secondary);
+}
+
+.no-matches p {
+  margin: 0 0 8px;
+}
+
+.no-matches-hint {
+  font-size: 0.85rem;
+  color: var(--nowl-text-muted);
 }
 
 /* ---- results --------------------------------------------------------- */
 
 .groups {
   width: 100%;
-  margin-top: 28px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .group {
   background: var(--nowl-bg-surface);
   border: 1px solid var(--nowl-border);
   border-radius: 14px;
-  padding: 16px 18px 18px;
+  padding: 15px 17px 17px;
 }
 
 .group-head {
@@ -227,13 +359,13 @@ header {
 .group-length-unit {
   color: var(--nowl-text-muted);
   font-weight: 500;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .group-count {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--nowl-text-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -248,55 +380,44 @@ header {
 }
 
 .word {
-  padding: 4px 9px;
-  font-size: 0.9rem;
+  padding: 5px 10px;
+  font: inherit;
+  font-size: 0.88rem;
   color: var(--nowl-text);
   background: var(--nowl-bg-elevated);
   border: 1px solid transparent;
   border-radius: 7px;
-  transition: border-color 0.12s ease, color 0.12s ease;
+  cursor: pointer;
+  transition: border-color 0.12s ease, color 0.12s ease, background 0.12s ease;
 }
 
-.word:hover {
+.word:hover,
+.word:focus-visible {
   border-color: var(--nowl-border-strong);
   color: var(--nowl-white);
+  outline: none;
+}
+
+/* Words that only work because of a blank, so you know one gets spent. */
+.word.uses-blank {
+  color: var(--nowl-coral);
+  border-color: rgba(255, 171, 112, 0.25);
+}
+
+.word.copied {
+  color: var(--nowl-bg-base);
+  background: var(--nowl-accent);
+  border-color: var(--nowl-accent);
 }
 
 /* Very large groups render as flowing text — thousands of chips would cost
    more than they are worth. */
 .word-run {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   line-height: 1.7;
   color: var(--nowl-text-secondary);
   word-spacing: 0.08em;
-}
-
-/* ---- responsive ------------------------------------------------------ */
-
-@media (max-width: 640px) {
-  header {
-    padding: 12px 14px;
-  }
-
-  .title {
-    font-size: 1.2rem;
-  }
-
-  .main {
-    padding: 4vh 14px 10vh;
-  }
-
-  .letters-field {
-    height: 52px;
-    font-size: 1.05rem;
-  }
-
-  .tile {
-    width: 32px;
-    height: 36px;
-    font-size: 0.95rem;
-  }
 }
 
 /* ---- github attribution ---------------------------------------------- */
@@ -338,4 +459,39 @@ header {
 .github-attribution-icon {
   font-size: 1.1em;
   line-height: 1;
+}
+
+/* ---- responsive ------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  header {
+    padding: 12px 14px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .search-bar {
+    padding: 16px 14px 12px;
+  }
+
+  .main {
+    padding: 16px 14px 16vh;
+  }
+
+  .letters-field {
+    height: 52px;
+    font-size: 1.05rem;
+  }
+
+  .tile {
+    width: 30px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+
+  .empty-state {
+    margin-top: 2vh;
+  }
 }

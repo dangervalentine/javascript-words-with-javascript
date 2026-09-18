@@ -8,7 +8,7 @@ import { GROUP_SPRING, GROUP_STAGGER } from "./motion";
 // nodes is the difference between instant and janky.
 const CHIP_LIMIT = 400;
 
-export default function ResultGroup({ length, words, index }) {
+export default function ResultGroup({ length, words, index, copied, onCopy }) {
   const asChips = words.length <= CHIP_LIMIT;
 
   return (
@@ -27,14 +27,25 @@ export default function ResultGroup({ length, words, index }) {
 
       {asChips ? (
         <ul className="word-list">
-          {words.map(word => (
-            <li key={word} className="word">
-              {word}
+          {words.map(({ word, blank }) => (
+            <li key={word}>
+              <button
+                type="button"
+                className={`word ${blank ? "uses-blank" : ""} ${
+                  copied === word ? "copied" : ""
+                }`}
+                onClick={() => onCopy(word)}
+                title={
+                  blank ? "Uses a blank tile — click to copy" : "Click to copy"
+                }
+              >
+                {copied === word ? "copied" : word}
+              </button>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="word-run">{words.join(", ")}</p>
+        <p className="word-run">{words.map(w => w.word).join(", ")}</p>
       )}
     </motion.section>
   );
