@@ -22,7 +22,7 @@ export default function Header() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          by victor d. johnson
+          by Danger Valentine
         </a>
       </div>
     </motion.header>
