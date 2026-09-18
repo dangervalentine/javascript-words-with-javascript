@@ -1,59 +1,300 @@
 body {
-  text-align: center;
+  background: var(--nowl-bg-base);
+  color: var(--nowl-text);
+}
+
+.app {
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: #121314;
-  color: #fff;
+  flex-direction: column;
 }
 
-form {
-  width: 100%;
-  margin: 2vh 0vh 5vh;
+/* ---- header ---------------------------------------------------------- */
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--nowl-border);
+  background: var(--nowl-bg-elevated);
 }
 
-input {
-  border: 2px solid white;
-  font-size: 1.5em;
-  outline: none;
-  background: none;
-  color: white;
-  padding: 0px 10px;
-  min-width: 5em;
-  border-radius: 5px;
-  text-align: center;
+.logo {
+  width: 44px;
+  height: 44px;
+  flex: none;
 }
 
-::placeholder {
-  color: #333;
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .title {
-  font-size: 2.5em;
-  color: aqua;
-  font-weight: bold;
-  margin-bottom: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--nowl-white);
+  margin: 0;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
-.result {
-  font-size: 1.2em;
-  border: 1px solid fuchsia;
-  max-width: 80%;
+.title-accent {
+  color: var(--nowl-accent);
+}
+
+.credit {
+  font-size: 0.72rem;
+  color: var(--nowl-text-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+
+.credit:hover {
+  color: var(--nowl-text-secondary);
+}
+
+/* ---- layout ---------------------------------------------------------- */
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 860px;
   margin: 0 auto;
+  padding: 5vh 20px 12vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.letter-count {
-  font-weight: bold;
-  color: aqua;
+/* ---- input ----------------------------------------------------------- */
+
+.letter-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-code {
-  color: fuchsia;
+.input-shell {
+  position: relative;
+  width: min(100%, 26rem);
+}
+
+.letters-field {
+  width: 100%;
+  height: 58px;
+  padding: 0 44px 0 20px;
+  font-size: 1.25rem;
+  letter-spacing: 0.32em;
+  text-align: center;
+  color: var(--nowl-text);
+  background: var(--nowl-bg-surface);
+  border: 1px solid var(--nowl-border-strong);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.letters-field::placeholder {
+  color: var(--nowl-text-muted);
+  letter-spacing: 0.04em;
+  font-size: 0.95rem;
+}
+
+.letters-field:focus {
+  border-color: var(--nowl-accent);
+  box-shadow: 0 0 0 3px rgba(127, 219, 202, 0.14);
+}
+
+.clear-button {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--nowl-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.clear-button:hover,
+.clear-button:focus-visible {
+  color: var(--nowl-text);
+  background: rgba(214, 222, 235, 0.08);
+  outline: none;
+}
+
+/* ---- letter rack ----------------------------------------------------- */
+
+.rack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+}
+
+.tile {
+  width: 38px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--nowl-bg-base);
+  background: var(--nowl-accent);
+  border-radius: 8px;
+  box-shadow: 0 3px 0 rgba(1, 14, 24, 0.55);
+}
+
+/* ---- summary --------------------------------------------------------- */
+
+.summary {
+  margin: 26px 0 0;
+  font-size: 0.9rem;
+  color: var(--nowl-text-muted);
+  text-align: center;
+  min-height: 1.4em;
+}
+
+.summary strong {
+  color: var(--nowl-accent);
+  font-weight: 700;
+}
+
+.summary-time {
+  color: var(--nowl-secondary-dark);
+}
+
+.empty {
+  margin-top: 12vh;
+  color: var(--nowl-text-muted);
+  font-size: 1rem;
+}
+
+/* ---- results --------------------------------------------------------- */
+
+.groups {
+  width: 100%;
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.group {
+  background: var(--nowl-bg-surface);
+  border: 1px solid var(--nowl-border);
+  border-radius: 14px;
+  padding: 16px 18px 18px;
+}
+
+.group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--nowl-border);
+}
+
+.group-length {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--nowl-accent);
+}
+
+.group-length-unit {
+  color: var(--nowl-text-muted);
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.group-count {
+  font-size: 0.78rem;
+  color: var(--nowl-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.word-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.word {
+  padding: 4px 9px;
+  font-size: 0.9rem;
+  color: var(--nowl-text);
+  background: var(--nowl-bg-elevated);
+  border: 1px solid transparent;
+  border-radius: 7px;
+  transition: border-color 0.12s ease, color 0.12s ease;
+}
+
+.word:hover {
+  border-color: var(--nowl-border-strong);
+  color: var(--nowl-white);
+}
+
+/* Very large groups render as flowing text — thousands of chips would cost
+   more than they are worth. */
+.word-run {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--nowl-text-secondary);
+  word-spacing: 0.08em;
+}
+
+/* ---- responsive ------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  header {
+    padding: 12px 14px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .main {
+    padding: 4vh 14px 10vh;
+  }
+
+  .letters-field {
+    height: 52px;
+    font-size: 1.05rem;
+  }
+
+  .tile {
+    width: 32px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
 }

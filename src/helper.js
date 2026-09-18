@@ -1,56 +1,111 @@
-const dictionary = require("./dictionary.json");
-const alphabet = "abcdefghijklmnopqrstuvwxyz";
-const dict = dictionary.dictionary;
+const A = 97; // "a"
+const ALPHABET_SIZE = 26;
 
-// Create an object that has a property
-// for each letter, with a value of 0.
-function emptyFrequencies() {
-  const emptyFrequency = {};
+// The input caps at 11 letters, so nothing longer can ever match.
+export const MAX_LETTERS = 11;
 
-  [...alphabet].forEach(c => (emptyFrequency[c] = 0));
+// The dictionary is a 2.4MB static asset, fetched rather than bundled. Inlined
+// into the JS it blocked first paint; as a separate file the shell renders
+// immediately and the browser caches the dictionary on its own.
+const DICTIONARY_URL = `${import.meta.env.BASE_URL}dictionary.json`;
 
-  return emptyFrequency;
-}
+// Built once, on first load, and reused for every keystroke after.
+//
+// The algorithm is unchanged — a word matches when it needs no more of any
+// letter than you hold — but the per-word letter counts are precomputed here
+// instead of being rebuilt on every comparison. The original recomputed a
+// 26-key object for all ~170,000 words on every single keystroke.
+//
+// Counts live in one flat Uint8Array of 26 slots per word rather than an array
+// of objects: one allocation instead of ~170,000, and the comparison loop
+// walks contiguous memory.
+let indexPromise = null;
 
-// Iterate through a word and increment
-// a value for each encounter of a letter.
-function frequencies(str) {
-  const freqs = emptyFrequencies();
+function buildIndex(words) {
+  const playable = [];
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    if (word.length > MAX_LETTERS) continue;
+    // Skip anything with punctuation; the original produced NaN counts for
+    // those and silently mismatched.
+    if (!/^[a-z]+$/.test(word)) continue;
+    playable.push(word);
+  }
 
-  [...str].forEach(c => (freqs[c] += 1));
-
-  return freqs;
-}
-
-// Determine if a given word has letters outside
-// the ones entered in the search params
-function match(params, dictWord) {
-  const dictWordFreqencies = frequencies(dictWord);
-
-  return [...alphabet].every(i => params[i] >= dictWordFreqencies[i]);
-}
-
-function main(params) {
-  const results = {};
-  const matches = [];
-  const letterFrequencies = frequencies(params);
-  const properLengthWords = dict.filter(word => word.length <= params.length);
-
-  for (let i = 0; i < properLengthWords.length; i++) {
-    if (match(letterFrequencies, properLengthWords[i])) {
-      matches.push(properLengthWords[i]);
+  const counts = new Uint8Array(playable.length * ALPHABET_SIZE);
+  for (let i = 0; i < playable.length; i++) {
+    const base = i * ALPHABET_SIZE;
+    const word = playable[i];
+    for (let j = 0; j < word.length; j++) {
+      counts[base + (word.charCodeAt(j) - A)] += 1;
     }
   }
 
-  for (let i = 1; i < params.length + 1; i++) {
-    results[i] = matches.filter(w => w.length === i);
-  }
-
-  Object.keys(results).forEach(
-    key => results[key].length === 0 && delete results[key]
-  );
-
-  return results;
+  return { playable, counts, size: words.length };
 }
 
-export default main;
+export function loadIndex() {
+  if (!indexPromise) {
+    indexPromise = fetch(DICTIONARY_URL)
+      .then(response => {
+        if (!response.ok) throw new Error(`dictionary ${response.status}`);
+        return response.json();
+      })
+      .then(data => buildIndex(data.dictionary));
+  }
+  return indexPromise;
+}
+
+export function normalise(raw) {
+  return raw
+    .toLowerCase()
+    .replace(/[^a-z]/g, "")
+    .slice(0, MAX_LETTERS);
+}
+
+/**
+ * Finds every word playable from `raw`.
+ * Groups are ordered longest-first, since the long words are the ones worth
+ * finding. Returns the total and how long the scan itself took.
+ */
+export async function search(raw) {
+  const letters = normalise(raw);
+  if (!letters) return { letters: "", groups: [], total: 0, ms: 0 };
+
+  const { playable, counts } = await loadIndex();
+  const started = performance.now();
+
+  const held = new Uint8Array(ALPHABET_SIZE);
+  for (let i = 0; i < letters.length; i++) {
+    held[letters.charCodeAt(i) - A] += 1;
+  }
+
+  const byLength = new Map();
+  let total = 0;
+
+  for (let i = 0; i < playable.length; i++) {
+    const word = playable[i];
+    if (word.length > letters.length) continue;
+
+    const base = i * ALPHABET_SIZE;
+    let fits = true;
+    for (let c = 0; c < ALPHABET_SIZE; c++) {
+      if (counts[base + c] > held[c]) {
+        fits = false;
+        break;
+      }
+    }
+    if (!fits) continue;
+
+    let bucket = byLength.get(word.length);
+    if (!bucket) byLength.set(word.length, (bucket = []));
+    bucket.push(word);
+    total += 1;
+  }
+
+  const groups = [...byLength.entries()]
+    .sort((a, b) => b[0] - a[0])
+    .map(([length, list]) => ({ length, words: list }));
+
+  return { letters, groups, total, ms: performance.now() - started };
+}
