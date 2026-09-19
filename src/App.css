@@ -99,7 +99,9 @@ header {
 .letters-field {
   width: 100%;
   height: 56px;
-  padding: 0 44px 0 20px;
+  /* Symmetric, so centred text is actually centred rather than pushed left
+     by the space reserved for the clear button. */
+  padding: 0 52px;
   font-size: 1.2rem;
   letter-spacing: 0.3em;
   text-align: center;
@@ -122,17 +124,21 @@ header {
   box-shadow: 0 0 0 3px rgba(127, 219, 202, 0.14);
 }
 
+/* Centred with auto margins, NOT transform: translateY(-50%). motion writes
+   its own inline `transform` for the scale animation, which overrides a CSS
+   transform and drops the button half its height below centre. */
 .clear-button {
   position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  width: 28px;
-  height: 28px;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+  margin: auto 0;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   line-height: 1;
   color: var(--nowl-text-muted);
   background: transparent;
@@ -483,6 +489,12 @@ kbd {
   .letters-field {
     height: 52px;
     font-size: 1.05rem;
+    padding: 0 46px;
+  }
+
+  .clear-button {
+    width: 32px;
+    height: 32px;
   }
 
   .tile {
